@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Review Accelerator</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div>
+          <p class="eyebrow">Review Accelerator</p>
+          <h1>Undo AI code confusion.</h1>
+          <p class="lede">
+            Link a local project, then review what exists and what changed since you last looked.
+          </p>
+        </div>
+
+        <section class="panel">
+          <h2>Project</h2>
+          <div class="folder-row">
+            <input id="projectPath" type="text" readonly placeholder="Choose a folder" />
+            <button id="chooseProject" type="button">Choose</button>
+          </div>
+          <button id="runReview" class="primary" type="button">Review changes</button>
+          <p id="progress" class="status">Ready.</p>
+        </section>
+
+        <section class="panel">
+          <h2>LLM key</h2>
+          <label>
+            Provider
+            <select id="provider"></select>
+          </label>
+          <label>
+            API key
+            <input id="apiKey" type="password" autocomplete="off" placeholder="Stored locally" />
+          </label>
+          <label>
+            Model
+            <input id="model" type="text" />
+          </label>
+          <label>
+            Base URL
+            <input id="baseUrl" type="text" />
+          </label>
+          <label>
+            Proxy URL
+            <input id="proxyUrl" type="text" placeholder="Optional, e.g. http://127.0.0.1:7890" />
+          </label>
+          <p id="effectiveProxy" class="status"></p>
+          <button id="testConnection" type="button">Test connection</button>
+          <button id="saveSettings" type="button">Save settings</button>
+          <p class="privacy-note">
+            Local project does not mean private. Code excerpts are sent to your LLM provider for summaries.
+          </p>
+        </section>
+      </aside>
+
+      <main class="review-surface">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Comprehension layer</p>
+            <h2 id="reviewTitle">No review yet</h2>
+          </div>
+          <div id="reviewStats" class="stats"></div>
+        </header>
+
+        <section id="emptyState" class="empty-state">
+          <h2>Start with one review.</h2>
+          <p>
+            The first review creates a snapshot baseline. Later reviews compare against that checkpoint.
+          </p>
+        </section>
+
+        <div id="results" class="results hidden">
+          <nav class="tabs" aria-label="Review views">
+            <button id="tabChanges" class="tab active" type="button" data-tab="changes">What changed</button>
+            <button id="tabStructure" class="tab" type="button" data-tab="structure">Structure map</button>
+          </nav>
+
+          <div id="changesPanel" class="tab-panel">
+            <section>
+              <div class="section-header">
+                <h2>What changed since last review</h2>
+                <span>Grouped by meaning</span>
+              </div>
+              <div id="changeClusters" class="change-list"></div>
+            </section>
+
+            <section>
+              <div class="section-header">
+                <h2>Understand before editing</h2>
+                <span>2-3 review anchors</span>
+              </div>
+              <div id="focusItems" class="focus-list"></div>
+            </section>
+          </div>
+
+          <div id="structurePanel" class="tab-panel hidden">
+            <section>
+              <div class="section-header">
+                <h2>Structure map</h2>
+                <span>Expand one area at a time</span>
+              </div>
+              <div id="structureAreas" class="area-list"></div>
+            </section>
+          </div>
+
+          <details id="noticeDetails" class="notice-details hidden">
+            <summary>Review notes</summary>
+            <section id="noticeStrip" class="notice-strip"></section>
+          </details>
+        </div>
+      </main>
+
+      <aside id="evidenceDrawer" class="evidence-drawer hidden" aria-live="polite">
+        <div class="drawer-header">
+          <div>
+            <p class="eyebrow">Evidence</p>
+            <h2 id="evidenceTitle">Code lines</h2>
+          </div>
+          <button id="closeEvidence" type="button">Close</button>
+        </div>
+        <pre id="evidenceCode"></pre>
+      </aside>
+    </div>
+
+    <script src="./renderer.js"></script>
+  </body>
+</html>
